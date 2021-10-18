@@ -1,2 +1,2 @@
 # iMate
-Database driven web application using Djnago : ITW-2 Project 
+Database driven web application using Django : ITW-2 Project 
