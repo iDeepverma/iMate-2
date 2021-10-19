@@ -18,7 +18,17 @@ from django.urls import path,include
 from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.shortcuts import render
 
+def indexView(request):
+    if request.user.is_authenticated:
+        userprofile = request.user.userprofile
+    else:
+        userprofile = None
+    context = {
+        'profile': userprofile
+    }
+    return render(request, template_name='index.html', context= context)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
