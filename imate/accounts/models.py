@@ -24,6 +24,6 @@ class UserProfile(models.Model):
     )
     randomAlias = models.CharField(max_length=20, blank = True)
     userHash = models.CharField(max_length=64)
-    randomPic = models.IntegerField()
+    randomPic = models.IntegerField(null= True)
     def __str__(self) -> str:
         return self.user.username
