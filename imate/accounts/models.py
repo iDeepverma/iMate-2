@@ -6,7 +6,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(
         get_user_model(),
         on_delete=models.CASCADE,
-        primary_key=True
+        primary_key=True,
+        related_name='profile'
     )
     userBio = models.CharField(
         max_length=150, 
