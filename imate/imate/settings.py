@@ -15,6 +15,7 @@ from os.path import join
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = iMate/imate  : in which manage.py and all apps are is located
 
 
 # Quick-start development settings - unsuitable for production
