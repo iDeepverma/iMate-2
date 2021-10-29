@@ -1,3 +1,4 @@
+import hashlib
 from django.db import models
 from django.contrib.auth import get_user_model
 # Create your models here.
@@ -23,8 +24,18 @@ class UserProfile(models.Model):
         default=False,
         null=False
     )
+    userFriends = models.ManyToManyField(
+        get_user_model(),
+        related_name='friends',
+        blank=True
+    )
     randomAlias = models.CharField(max_length=20, blank = True)
-    userHash = models.CharField(max_length=64)
-    randomPic = models.IntegerField(null= True)
+    userHash = models.CharField(max_length=64, editable=False)
+    randomPic = models.IntegerField(null= True,blank=True)
+
+    def save(self, *args, **kwargs):
+        self.userHash = hashlib.sha256(self.user.username.encode()).hexdigest()
+        super(UserProfile, self).save(*args, **kwargs)
+
     def __str__(self) -> str:
         return self.user.username
