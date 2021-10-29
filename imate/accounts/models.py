@@ -6,7 +6,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(
         get_user_model(),
         on_delete=models.CASCADE,
-        primary_key=True
+        primary_key=True,
+        related_name='profile'
     )
     userBio = models.CharField(
         max_length=150, 
@@ -24,6 +25,6 @@ class UserProfile(models.Model):
     )
     randomAlias = models.CharField(max_length=20, blank = True)
     userHash = models.CharField(max_length=64)
-    randomPic = models.IntegerField()
+    randomPic = models.IntegerField(null= True)
     def __str__(self) -> str:
         return self.user.username
