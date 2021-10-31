@@ -7,6 +7,8 @@ name = "pypi"
 django = "*"
 django-allauth = "*"
 pillow = "*"
+channels = "*"
+channels-redis = "*"
 
 [dev-packages]
 

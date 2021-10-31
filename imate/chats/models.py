@@ -25,7 +25,7 @@ class Message(models.Model):
     userHash = models.CharField(max_length=64, editable=False, null=True)
 
     def save(self, *args, **kwargs):
-        self.userHash = conversastionhash(receiver,sender)
+        self.userHash = conversastionhash(self.receiver,self.sender)
         super(Message, self).save(*args, **kwargs)
 
     def __str__(self):
