@@ -30,7 +30,7 @@ class UserProfile(models.Model):
         blank=True
     )
     randomAlias = models.CharField(max_length=20, blank = True)
-    userHash = models.CharField(max_length=64, editable=False)
+    userHash = models.CharField(max_length=64, editable=False) #is also used as group name for channels
     randomPic = models.IntegerField(null= True,blank=True)
 
     def save(self, *args, **kwargs):
