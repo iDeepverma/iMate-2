@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.contrib.auth import get_user_model
 from . import models
+from django.http import HttpResponse
 # Create your views here.
 
 def chatView(request,username):
@@ -17,3 +18,5 @@ def chatView(request,username):
     return render(request,'chats/main-chat-page.html',context)
     
     
+def chatHomeRedirect(request):
+    return HttpResponse("CHAT HOME")
