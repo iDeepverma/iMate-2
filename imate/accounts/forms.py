@@ -17,7 +17,8 @@ class SignupForm(UserCreationForm):
         newUser.email = self.cleaned_data['email']
         if commit == True:
             newUser.save()
-            userHash = hashlib.sha256(newUser.username.encode()).hexdigest()
-            userProfile = models.UserProfile(user=newUser, userHash = userHash)
+            # userHash = hashlib.sha256(newUser.username.encode()).hexdigest()
+            # userProfile = models.UserProfile(user=newUser, userHash = userHash)
+            userProfile = models.UserProfile(user=newUser)
             userProfile.save()
         return newUser
