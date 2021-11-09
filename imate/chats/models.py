@@ -23,7 +23,8 @@ class Message(models.Model):
     sender = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, related_name="sender")
     timestamp = models.DateTimeField(auto_now_add=True)
     userHash = models.CharField(max_length=64, editable=False, null=True)
-
+    isRead = models.BooleanField(default=False)
+    
     def save(self, *args, **kwargs):
         self.userHash = conversastionhash(self.receiver,self.sender)
         super(Message, self).save(*args, **kwargs)

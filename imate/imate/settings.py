@@ -64,7 +64,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'imate.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
