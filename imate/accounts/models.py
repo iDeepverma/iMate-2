@@ -16,8 +16,8 @@ class UserProfile(models.Model):
         default='Hello World!'
     )
     userPic = models.ImageField(
-        upload_to = 'userData/profilePic/',
-        blank = True,
+        upload_to = 'profilePics/',
+        default = 'profilePics/default.jpg',
         null = True
     )
     isOnline = models.BooleanField(
@@ -29,13 +29,13 @@ class UserProfile(models.Model):
         related_name='friends',
         blank=True
     )
-    randomAlias = models.CharField(max_length=20, blank = True)
+    randomAlias = models.CharField(max_length=20, blank = True, default = 'Anonymous')
     userHash = models.CharField(max_length=64, editable=False) #is also used as group name for channels
-    randomPic = models.IntegerField(null= True,blank=True)
+    randomPic = models.ImageField(null= True, blank=True, default = 'profilePics/anonymous.jpg' )   #user.randomPic = list[random_index]
 
     def save(self, *args, **kwargs):
         self.userHash = hashlib.sha256(self.user.username.encode()).hexdigest()
         super(UserProfile, self).save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return self.user.username
+        return f'{self.user.username} Profile.'

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'accounts',
     'chats',
     'channels',
+    'crispy_forms',
 
     #OAuth apps
     'allauth',
@@ -124,7 +125,7 @@ SITE_ID = 3
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-MEDIA_ROOT = join(BASE_DIR,'accounts')
+MEDIA_ROOT = join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 
 # Password validation
@@ -164,6 +165,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    '/var/www/static/',
+]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
