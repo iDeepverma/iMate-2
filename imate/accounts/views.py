@@ -16,7 +16,7 @@ def signupView(request):
         if form.is_valid():
             user = form.save()
             login(request,user,backend='django.contrib.auth.backends.ModelBackend')
-            return redirect('login')
+            return redirect('profile')
     context['form'] = form
     return render(request, 'accounts/signup.html',context)
 
@@ -42,10 +42,38 @@ def logoutView(request):
     logout(request)
     return render(request,'accounts/logout.html')
 
+# @login_required
+# def profileView(request):
+#     try:
+#         profile = request.user.profile
+#     except get_user_model().profile.RelatedObjectDoesNotExist:
+#         profile = models.UserProfile.objects.create(user = request.user, userHash = hashlib.sha256(request.user.username.encode()).hexdigest())
+#     return render(request,'accounts/profile.html',{'profile':profile})
+
+
 @login_required
 def profileView(request):
-    try:
-        profile = request.user.profile
-    except get_user_model().profile.RelatedObjectDoesNotExist:
-        profile = models.UserProfile.objects.create(user = request.user, userHash = hashlib.sha256(request.user.username.encode()).hexdigest())
-    return render(request,'accounts/profile.html',{'profile':profile})
+    if request.method =='POST':
+        u_form = forms.UserUpdateForm(request.POST,instance = request.user)
+        p_form = forms.ProfileUpdateForm( request.POST,
+                                    request.FILES,
+                                    instance = request.user.profile)
+
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request , f'Account updated!')
+            return redirect('profile')
+    else :
+        try:
+            UserProfile = request.user.profile
+        except:
+            UserProfile = models.UserProfile.objects.create(user=request.user)
+
+        u_form = forms.UserUpdateForm(instance = request.user)
+        p_form = forms.ProfileUpdateForm(instance = UserProfile)
+        context = {
+            'u_form' : u_form,
+            'p_form' : p_form
+        }
+    return render(request, 'accounts/profile.html', context)

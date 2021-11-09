@@ -1,0 +1,26 @@
+{% extends 'accounts/login-signup-base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %} Profile {% endblock title %}
+{% include 'messages.html' %}
+{% block content%}
+
+<div class="container meRightBox">
+    <div class="card-body meCardBody">
+        <h1 class="card-title mb-5 mt-5"> Welcome {{request.user.first_name}} !!</h1>
+        <div class="card-text">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token%}
+                <div class="form-group " style="max-width: 50%; margin : 0 auto">
+                    {{ u_form | crispy}}
+                    {{ p_form | crispy}}
+                    <button type="submit" class="btn btn-outline-dark btn-block"
+                            style="width: 80%;margin:0 auto;"> Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,14 +1,41 @@
-{% extends 'base.html' %}
-{% block title %}Profile{% endblock %}
-{% block  content%}
+{% extends 'accounts/login-signup-base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% block title %}Login{% endblock title %}
+{% block content%}
 {% include 'messages.html' %}
-<div class="container py-5">
-  <h1>Login</h1>
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary" type="submit">Login</button>
-  </form>
-  <p class="text-center">Don't have an account? <a href="{% url 'signup' %}">Create an account</a>.</p>
+
+{% load crispy_forms_tags %}
+<div class="container">
+    <div class="card mb-3  meOuterBox">
+        <div class="row g-0 meInnerBox">
+            <div class="col-md-5 meLeftImage">
+            </div>
+            <div class="col-md-7 meRightBox">
+                <div class="card-body meCardBody">
+                    <h1 class="card-title mb-5 mt-5">Login!</h1>
+                    <div class="card-text">
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            <div class="form-group">
+                                {{ form | crispy }}
+                            </div>
+
+                            <button type="submit" class="btn btn-outline-dark btn-block"
+                                    style="width: 80%;margin:0 auto" ;>Login
+                            </button>
+                            <br>
+
+
+                            <p class="text-center">Dont have an account? <a href="{% url 'signup' %}">Signup!</a></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
 {% endblock %}
