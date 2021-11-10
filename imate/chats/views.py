@@ -5,7 +5,7 @@ from accounts.models import UserProfile
 # Create your views here.
 
 def chatView(request,username=None):
-    if user.is_authenticated:
+    if request.user.is_authenticated:
         context = {}
         profile = UserProfile.objects.get(user=request.user)
         friendlist = profile.userFriends.all()
@@ -40,27 +40,7 @@ def chatView(request,username=None):
     
     else :
         return redirect('login')
-
-
-# def recentChat(request):
-#     context = {}
-#     profile = UserProfile.objects.get(user=request.user)
-#     friendlist = profile.userFriends.all()
-#     recents = []
-#     for i in friendlist:
-#         chatHash = models.conversastionhash(request.user, i)
-#         msgs = models.Message.objects.filter(userHash=chatHash)
-#         unread = len(msgs.filter(isRead=False))
-#         msg = msgs.latest('timestamp')
-#         recentData = {
-#             'unread':unread,
-#             'msg':msg,
-#             'friendName':i
-#         }
-#         recents.append(recentData)
-#     context['recents'] = recents
-
-#     return render(request,'chats/recent-chats.html',context)
+    
 
     
 
