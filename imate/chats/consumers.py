@@ -1,11 +1,11 @@
-import json
+import json,random
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from channels.db import database_sync_to_async
-from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
 from channels.exceptions import DenyConnection
 from . import models
-from accounts.models import UserProfile
+from accounts.models import RandomChat, UserProfile
 
 class ChatConsumer(AsyncWebsocketConsumer):
     
@@ -113,3 +113,48 @@ class ChatConsumer(AsyncWebsocketConsumer):
         onlineStatus=UserProfile.objects.get(user=self.friend).isOnline
         return onlineStatus
 
+class RandomChatPairer(AsyncWebsocketConsumer):
+
+    async def connect(self):
+        self.user = self.scope['user']
+        if self.user.is_authenticated == False:
+            raise DenyConnection('User not logged in')
+        randomChatid = await database_sync_to_async(self.addRandomChat)()
+        return await self.accept()
+    
+    async def disconnect(self, code):
+        await database_sync_to_async(self.removeRandomChat)()
+        return await super().disconnect(code)
+    
+    async def receive(self, text_data=None, bytes_data=None):
+        data = json.loads(text_data)
+        message = data['message']
+        if message=='search':
+            pair = await database_sync_to_async(self.getPair)()
+            if pair == None:
+                await self.send(text_data=json.dumps({
+                    'type':'info',
+                    'pair_status':False
+                }))
+            else:
+                await self.send(text_data=json.dumps({
+                    'type':'info',
+                    'pair_status':True,
+                    'pair_code':pair
+                }))
+
+
+        return await super().receive(text_data=text_data, bytes_data=bytes_data)
+
+    def addRandomChat(self):
+        return RandomChat.objects.get_or_create(user=self.user)
+
+    def getPair(self):
+        peopleList = RandomChat.objects.all().exclude(user=self.user)
+        try:
+            return random.choice(peopleList)
+        except IndexError:
+            return None
+
+    def removeRandomChat(self):
+        return RandomChat.objects.get(user=self.user).delete()
