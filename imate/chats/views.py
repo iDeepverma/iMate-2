@@ -1,42 +1,47 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.contrib.auth import get_user_model
-from . import models
+from . import models as chat_models
 from accounts.models import UserProfile
 # Create your views here.
 
 def chatView(request,username=None):
-    if user.is_authenticated:
+    if request.user.is_authenticated:
         context = {}
-        profile = UserProfile.objects.get(user=request.user)
-        friendlist = profile.userFriends.all()
-        recents = []
+        profile = UserProfile.objects.get(user=request.user) #PROFILE OF LOGGED IN USER
+        friendlist = profile.userFriends.all() #frnd of current logged in user
+        recents = []    #for the side contact list
         for i in friendlist:
-            chatHash = models.conversastionhash(request.user, i)
-            msgs = models.Message.objects.filter(userHash=chatHash)
+            chatHash = chat_models.conversastionhash(request.user, i)
+            msgs = chat_models.Message.objects.filter(userHash=chatHash)
             unread = len(msgs.filter(isRead=False))
-            msg = msgs.latest('timestamp')
+            try :
+                lastMsg = msgs.latest('timestamp').message
+            except :
+                lastMsg =""
+
             recentData = {
-                'unread':unread,
-                'msg':msg,
-                'friendName':i
+                'frnd':i,
+                'unread':unread, #no of unread
+                'lastMsg':lastMsg #lastmsg
             }
             recents.append(recentData)
+        # recents.sort(reverse=True, key=lambda a: a['lastMsg'].timestamp)
         context['recents'] = recents
         # try:
-        #     frnd = get_user_model().get(username =  username)
+        #     activeFrnd = get_user_model().get(username =  username)
         # except get_user_model().DoesNotExist:
         #     # error handling if no such username exits
         if username !=None:
-            context['frnd'] = get_object_or_404(get_user_model(),username=username)
-            convHash = models.conversastionhash(request.user,context['frnd'])
-            context['messages'] = models.Message.objects.filter(userHash=convHash).order_by('-timestamp')
-            context['frndProfile'] = context['frnd'].profile
+            context['activeFrnd'] = get_object_or_404(get_user_model(),username=username) #current-convo-open
+            convHash = chat_models.conversastionhash(request.user,context['activeFrnd'])
+            context['activeFrndMsgs'] = chat_models.Message.objects.filter(userHash=convHash).order_by('timestamp')
+            context['activeFrndProfile'] = context['activeFrnd'].profile
         else:
-            context['frnd']=None
-            context['messages']=None
-            context['frndProfile'] = None
+            context['activeFrnd']=None
+            context['activeFrndMsgs']=None
+            context['activeFrndProfile'] = None
 
-        return render(request,'chats/main-chat-page.html',context)
+        return render(request,'chats/main-chat-page2.html',context)
     
     else :
         return redirect('login')
@@ -48,14 +53,14 @@ def chatView(request,username=None):
 #     friendlist = profile.userFriends.all()
 #     recents = []
 #     for i in friendlist:
-#         chatHash = models.conversastionhash(request.user, i)
-#         msgs = models.Message.objects.filter(userHash=chatHash)
+#         chatHash = chat_models.conversastionhash(request.user, i)
+#         msgs = chat_models.Message.objects.filter(userHash=chatHash)
 #         unread = len(msgs.filter(isRead=False))
-#         msg = msgs.latest('timestamp')
+#         lastMsg = msgs.latest('timestamp')
 #         recentData = {
 #             'unread':unread,
-#             'msg':msg,
-#             'friendName':i
+#             'lastMsg':lastMsg,
+#             'frnd':i
 #         }
 #         recents.append(recentData)
 #     context['recents'] = recents

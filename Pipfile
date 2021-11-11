@@ -9,6 +9,7 @@ django-allauth = "*"
 pillow = "*"
 channels = "*"
 channels-redis = "*"
+django-crispy-forms = "*"
 
 [dev-packages]
 
