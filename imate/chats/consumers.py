@@ -88,8 +88,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
                 'type': 'chat_message',
                 'message': message,
-                'sender':self.user.username,
-                'receiver':self.friend.username
+                'sender':event['sender'],
+                'receiver':event['receiver']
         }))
     
     def getGroupName(self):

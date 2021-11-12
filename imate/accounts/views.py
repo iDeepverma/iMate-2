@@ -20,6 +20,8 @@ def signupView(request):
     return render(request, 'accounts/signup.html',context)
 
 def loginView(request):
+    # if request.user.is_authenticated():
+    #     return redirect('chat-recent')
 	if request.method == "POST":
 		form = AuthenticationForm(request, data=request.POST)
 		if form.is_valid():
@@ -77,10 +79,10 @@ def profileView(request):
         }
     return render(request, 'accounts/profile.html', context)
 
-def searchView(request,username):
-    if request.user.username == username:
-        return redirect('profile')
-    else:
-        context = {}
-        context['profile'] =  get_object_or_404(get_user_model(),username=username).profile
-        return render(request,'accounts/search.html')
+# def searchView(request,username):
+#     if request.user.username == username:
+#         return redirect('profile')
+#     else:
+#         context = {}
+#         context['profile'] =  get_object_or_404(get_user_model(),username=username).profile
+#         return render(request,'accounts/search.html')
