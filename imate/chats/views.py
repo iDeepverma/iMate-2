@@ -49,4 +49,13 @@ def chatView(request,username=None):
     return render(request,'chats/main-chat-page2.html',context)
  
 
- 
+@login_required
+def randomWaiting(request):
+    return render(request,'chats/waiting.html')
+
+@login_required
+def randomChatting(request):
+    context={}
+    context['chatId'] = request.user.profile.randomChatId
+    return render(request,'chats/randomChat.html',context=context)
+

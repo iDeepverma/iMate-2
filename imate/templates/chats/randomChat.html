@@ -59,8 +59,13 @@
             float: left;
             border-radius: 50%;
         }
-
-
+ 
+        #clock {
+            color: white;
+            text-align: center;
+            font-size: 60px;
+            margin-top: 0px;
+        }
     </style>
 
 </head>
@@ -85,42 +90,12 @@
                 </div>
             </div>
         </div>
-        <div id="search">
-            <label for=""><i aria-hidden="true" class="fa fa-search"></i></label>
-            <input placeholder="Search friends..." type="text"/>
-        </div>
-        <div id="contacts">
-            <ul>
 
-                {% for each in recents %}
-                <li class="contact  {% if each.frnd.username == activeFrnd.username %} active {% endif %} ">
-                    <div class="wrap" onclick="chatRedirect('{{ each.frnd.username }}')">
-                        <span class="contact-status online"></span>
-                        <img alt="" src="{{ each.frnd.profile.userPic.url }}"/>
-                        <div class="meta">
-                            <p class="name">{{each.frnd.first_name }} {{each.frnd.last_name}}</p>
-                            <p class="preview">{% if each.isYou %}<span>You: </span>{%endif%}{{each.lastMsg}}</p>
-                        </div>
-                    </div>
-                </li>
-                {% endfor %}
+        <p id="clock"></p>
 
-
-                <!--                <li class="contact active">-->
-                <!--                    <div class="wrap">-->
-                <!--                        <span class="contact-status busy"></span>-->
-                <!--                        <img alt="" src="http://emilcarlsson.se/assets/harveyspecter.png"/>-->
-                <!--                        <div class="meta">-->
-                <!--                            <p class="name">Harvey Specter</p>-->
-                <!--                            <p class="preview">Wrong. You take the gun, or you pull out a bigger one. Or, you call their-->
-                <!--                                bluff. Or, you do any one of a hundred and forty six other things.</p>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </li>-->
-            </ul>
-        </div>
         <div id="bottom-bar">
-            <button onclick="location.href='{% url 'waiting' %}';">Chat Anonymously</button>
+            <button onclick="location.href='#';">Add Friend</button>
+            <button onclick="location.href='{% url 'chat-recent' %}';">Back</button>
         </div>
     </div>
     <div id="content">
@@ -152,8 +127,27 @@
 <script type='text/javascript'>
     var chatData = {
         'myUsername':'{{ user.username }}',
-        'frndUsername':'{{ activeFrnd }}'
     }
+
+    var target = new Date().getTime() + 15 * 60 * 1000;
+ 
+    var x = setInterval(function () {
+ 
+        var now = new Date().getTime();
+ 
+        var distance = target - now;
+ 
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+ 
+        document.getElementById("clock").innerHTML = minutes + "m " + seconds + "s ";
+ 
+        // If the count down is over, write some text
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("clock").innerHTML = "EXPIRED";
+        }
+    }, 1000);
 </script>
 <script src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script>
 <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>

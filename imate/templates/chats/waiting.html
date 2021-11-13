@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Waiting</title>
+    </head>
+    <body>
+Hello world
+        
+        <script>
+const chatSocket = new WebSocket(
+    'ws://'
+    + window.location.host
+    + '/ws/randomchat/'
+);
+chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    console.log(data);
+    if(data.type.localeCompare("infoMsg")==0){
+        if(data.pairStatus == true){
+            window.location.href = '/random/';
+        }
+    }
+};
+
+function sendSignal(){
+    chatSocket.send(JSON.stringify({
+        'message': 'search'
+    }));
+}
+
+
+setInterval(sendSignal, 1000);
+
+
+chatSocket.onclose = function(e) {
+    console.error('Chat socket closed unexpectedly');
+}; 
+        </script>
+    </body>
+</html>

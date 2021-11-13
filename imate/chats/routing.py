@@ -6,4 +6,5 @@ from . import consumers
 websocket_urlpatterns = [
     re_path(r'ws/chat/(?P<frnd_name>\w+)/$', consumers.ChatConsumer.as_asgi()),
     re_path(r'ws/randomchat/$',consumers.RandomChatPairer.as_asgi()),
+    # re_path(r'ws/waiting/')
 ]
