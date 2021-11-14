@@ -14,7 +14,7 @@
                 <div class="form-group " style="max-width: 50%; margin : 0 auto">
                     {{ u_form | crispy}}
                     {{ p_form | crispy}}
-                    <button class="btn btn-outline-dark btn-block" ><a href="{% url 'chat-recent' %}">Back</a> </button>
+                    <button type='button' class="btn btn-outline-dark btn-block" onclick="location.href='{% url 'chat-recent' %}';">Back</button>
                     <button type="submit" class="btn btn-outline-dark btn-block" > Save</button>
 
                 </div>

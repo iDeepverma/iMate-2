@@ -41,3 +41,18 @@ class UserProfile(models.Model):
 
     def __str__(self) -> str:
         return self.user.username
+
+
+class RandomFrnd(models.Model):
+    user1 = models.OneToOneField(
+        UserProfile,
+        on_delete=models.CASCADE,
+        related_name='random_frnd'
+    )
+    user2 = models.OneToOneField(
+        UserProfile,
+        on_delete=models.CASCADE,
+        related_name='random_self'
+    )
+    user1consent = models.BooleanField(default=False)
+    user2consent = models.BooleanField(default=False)
