@@ -31,3 +31,17 @@ class Message(models.Model):
 
     def __str__(self):
         return str(self.sender) + "@" + str(self.receiver)
+
+
+
+class RandomChat(models.Model):
+    user = models.OneToOneField(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name='randomChatData'
+    )
+    chatId = models.CharField(null=True,blank=True,max_length=50)
+    isPair = models.BooleanField(default=False)
+    def __str__(self) -> str:
+        return self.user.username

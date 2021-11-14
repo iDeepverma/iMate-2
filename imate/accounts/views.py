@@ -1,9 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth import get_user_model,login,logout,authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.shortcuts import redirect
 from . import forms
 from . import models
 import hashlib
@@ -21,6 +20,8 @@ def signupView(request):
     return render(request, 'accounts/signup.html',context)
 
 def loginView(request):
+    # if request.user.is_authenticated():
+    #     return redirect('chat-recent')
 	if request.method == "POST":
 		form = AuthenticationForm(request, data=request.POST)
 		if form.is_valid():
@@ -77,3 +78,11 @@ def profileView(request):
             'p_form' : p_form
         }
     return render(request, 'accounts/profile.html', context)
+
+# def searchView(request,username):
+#     if request.user.username == username:
+#         return redirect('profile')
+#     else:
+#         context = {}
+#         context['profile'] =  get_object_or_404(get_user_model(),username=username).profile
+#         return render(request,'accounts/search.html')
