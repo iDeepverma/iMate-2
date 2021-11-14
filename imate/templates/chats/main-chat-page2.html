@@ -99,7 +99,7 @@
                         <img alt="" src="{{ each.frnd.profile.userPic.url }}"/>
                         <div class="meta">
                             <p class="name">{{each.frnd.first_name }} {{each.frnd.last_name}}</p>
-                            <p class="preview">{{each.lastMsg}}</p>
+                            <p class="preview"></p>
                         </div>
                     </div>
                 </li>
@@ -133,7 +133,7 @@
         <div class="messages">
             <ul>
                 {% for msg in activeFrndMsgs %}
-                <li class=" {% if msg.sender == user %} sent  {% else %} replies {% endif%} ">
+                <li class=" {% if msg.sender == user %} replies {% else %} sent {% endif%} ">
 
                     <p>{{ msg.message }}</p>
                 </li>
