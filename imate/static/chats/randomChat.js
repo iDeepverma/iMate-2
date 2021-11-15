@@ -22,11 +22,15 @@ function newMessage(msgType,message,whoDid) {
     else{
         $('.contact.active .preview').html('<span>You: </span>'+message);
     }
-    $(".messages").animate({scrollTop: $(document).height()}, "fast");
+    $(".messages").animate({scrollTop: $('.messages').scrollHeight()}, "fast");
 };
 
-function endChat(){
-    //called when user gets offline
+function endChat(offline){
+    //called when user gets offline or when chat timer expires  
+    const inputBox = document.querySelector("#msg-input-box");
+    inputBox.disabled=true;
+    inputBox.placeholder = "Chat Ended";
+    inputBox.style.textAlign = 'center';
 }
 
 
@@ -39,7 +43,7 @@ const chatSocket = new WebSocket(
 
 chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
-    // console.log(data);
+    console.log(data);
     if(data.type.localeCompare("chat_message")==0){
         if(data.sender.localeCompare('notme')==0){
             newMessage('sent',data['message'],true)
