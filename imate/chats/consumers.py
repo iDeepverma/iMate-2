@@ -5,7 +5,7 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
 from channels.exceptions import DenyConnection
 from . import models
-from accounts.models import UserProfile
+from accounts.models import UserProfile,RandomFrnd
 
 class ChatConsumer(AsyncWebsocketConsumer):
     
@@ -188,3 +188,112 @@ class RandomChatPairer(AsyncWebsocketConsumer):
         profile = self.user.profile
         profile.isRandom = False
         profile.save()
+    
+
+class RandomChat(AsyncWebsocketConsumer):
+    
+    async def connect(self):
+        #Run when client connect to server via a websoclet
+        self.user = self.scope['user']
+        if self.user.is_authenticated == False:
+            raise DenyConnection('User not logged in')
+        self.groupName = await database_sync_to_async(self.getGroupName)()     #derives groupname for the user
+        await database_sync_to_async(self.setOnline)(True)                     #sets its online status to true
+        self.frndModel = await database_sync_to_async(self.setFrndModel)()
+        await self.channel_layer.group_add(                                    #adding channel layer to above two groups
+            self.groupName,
+            self.channel_name
+        )
+        return await self.accept()
+
+    async def disconnect(self, code):
+        await self.channel_layer.group_send(
+            self.groupName,
+            {
+                'type': 'end_chat'
+            }
+        )                               
+        await self.channel_layer.group_discard(                                #removes channel name from above two groups
+            self.groupName,
+            self.channel_name
+        )
+        await database_sync_to_async(self.setOnline)(False)                    #sets online status to false in profile database
+        await database_sync_to_async(self.removeFrndModel)()
+        return await super().disconnect(code)
+
+    async def receive(self, text_data=None, bytes_data=None):
+        '''
+            Gets events from the clients via the websocket.
+            the type field in the text_data chooses which handler to run for that specific event
+        '''
+
+        data_obj = json.loads(text_data)
+        if 'message' in data_obj:
+            message = data_obj['message']                                          #raw message from the websocket
+            await self.channel_layer.group_send(
+                self.groupName,
+                {
+                    'type': 'chat_message',
+                    'message': message,
+                    'sender':self.user.username
+                }
+            )
+        elif 'signal' in data_obj:
+            if data_obj['signal'] == 'add_friend':
+                await database_sync_to_async(self.addFriend)()
+
+        return await super().receive(text_data=text_data, bytes_data=bytes_data)
+    
+    async def chat_message(self, event):
+        message = event['message']
+        if event['sender'] == self.user.username:
+            sender='me'
+        else:
+            sender='notme'
+        # Send message to WebSocket
+        await self.send(text_data=json.dumps({
+                'type': 'chat_message',
+                'message': message,
+                'sender': sender
+        }))
+    
+    async def end_chat(self,event):
+        await self.send(text_data=json.dumps({
+                'type':'end_chat'
+        }))
+
+
+    def getGroupName(self):
+        self.profile = self.user.profile
+        return self.profile.randomChatId
+    
+    def setOnline(self, value):
+        profile = UserProfile.objects.get(user=self.user)
+        profile.isOnline = value
+        profile.save()
+
+    def setFrndModel(self):
+        users = UserProfile.objects.filter(randomChatId=self.groupName).order_by('user')
+        return RandomFrnd.objects.get_or_create(user1=users[0],user2=users[1])[0]
+    
+    def removeFrndModel(self):
+        users = UserProfile.objects.filter(randomChatId=self.groupName).order_by('user')
+        try:
+            RandomFrnd.objects.get(user1=users[0],user2=users[1]).delete()
+        except RandomFrnd.DoesNotExist:
+            return None
+    
+    def addFriend(self):
+
+        if self.frndModel.user1 == self.user.profile:
+            print('funck')
+            self.frndModel.user1consent = True
+            self.frndModel.save()
+        elif self.frndModel.user2 == self.user.profile:
+            print('whys')
+            self.frndModel.user2consent = True
+            self.frndModel.save()
+        
+        if self.frndModel.user1consent ==True and self.frndModel.user2consent==True:
+            self.frndModel.user1.userFriends.add(self.frndModel.user2.user)
+            self.frndModel.user2.userFriends.add(self.frndModel.user1.user)
