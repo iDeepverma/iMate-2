@@ -29,7 +29,7 @@ class UserProfile(models.Model):
         related_name='friends',
         blank=True
     )
-    randomAlias = models.CharField(max_length=20, blank = True, default = 'Anonymous')
+    randomAlias = models.CharField(max_length=30, blank = True, default = 'Anonymous')
     userHash = models.CharField(max_length=64, editable=False) #is also used as group name for channels
     randomPic = models.ImageField(null= True, blank=True, default = 'profilePics/anonymous.jpg' ) 
     isRandom = models.BooleanField(default=False)  #true when searching for random

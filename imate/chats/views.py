@@ -4,6 +4,7 @@ from . import models as chat_models
 from accounts.models import UserProfile
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from . import randomFill
 # Create your views here.
  
 
@@ -27,7 +28,7 @@ def chatView(request,username=None):
             'frnd':i,
             'unread':unread, #no of unread
             'lastMsg':lastMsg, #laSstmsg
-            'isYou':True if lastMsgObj.sender==request.user else False
+            # 'isYou':True if lastMsgObj.sender==request.user else False
         }
         recents.append(recentData)
     context['recents'] = recents
@@ -55,7 +56,9 @@ def randomWaiting(request):
 
 @login_required
 def randomChatting(request):
-    context={}
-    context['chatId'] = request.user.profile.randomChatId
-    return render(request,'chats/randomChat.html',context=context)
+    context = {
+        'chatId' : request.user.profile.randomChatId,
+        'randomAlias' : randomFill.randNamefn()
+    }
+    return render(request,'chats/randomChat.html',context)
 
