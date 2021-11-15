@@ -1,136 +1,42 @@
-{% load static %}
+{% extends 'chats/chat-base.html' %}
 
-<!DOCTYPE html>
+{% block search  %}
+<label for=""><i aria-hidden="true" class="fa fa-search"></i></label>
+<input placeholder="Search friends..." type="text"/>
+{% endblock search %}
 
-<html class=''>
-<head>
-    <!--    <script src='//production-assets.codepen.io/assets/editor/live/console_runner-079c09a0e3b9ff743e39ee2d5637b9216b3545af0de366d4b9aad9dc87e26bfd.js'></script>-->
-    <!--    <script src='//production-assets.codepen.io/assets/editor/live/events_runner-73716630c22bbc8cff4bd0f07b135f00a0bdc5d14629260c3ec49e5606f98fdd.js'></script>-->
-    <!--    <script src='//production-assets.codepen.io/assets/editor/live/css_live_reload_init-2c0dc5167d60a5af3ee189d570b1835129687ea2a61bee3513dee3a50c115a77.js'></script>-->
-    <meta charset='UTF-8'>
-    <!--    <link href="//production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" rel="shortcut icon"-->
-    <!--          type="image/x-icon"/>-->
-    <!--    <link color="#111" href="//production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg"-->
-    <!--          rel="mask-icon"-->
-    <!--          type=""/>-->
-    <!--    <link href="https://codepen.io/emilcarlsson/pen/ZOQZaV?limit=all&page=74&q=contact+" rel="canonical"/>-->
-    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300' rel='stylesheet'
-          type='text/css'>
+{% block contacts %}
+<ul>
 
-    <script src="https://use.typekit.net/hoy3lrg.js"></script>
-    <script>try {
-        Typekit.load({async: true});
-    } catch (e) {
-    }</script>
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css' rel='stylesheet prefetch'>
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css'
-          rel='stylesheet prefetch'>
-    <link href="{% static 'chats/chats-styles2.css' %}" rel="stylesheet">
-
-
-    <!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" id="bootstrap-css" rel="stylesheet">-->
-    <!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>-->
-    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
-    <!--&lt;!&ndash;&#45;&#45;&#45;&#45; Include the above in your HEAD tag &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-
-    <!--<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" id="bootstrap-css" rel="stylesheet">-->
-    <!--<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>-->
-    <!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
-    <!--&lt;!&ndash;&#45;&#45;&#45;&#45; Include the above in your HEAD tag &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-    <style class="cp-pen-styles">
-
-        #expanded .link-list {
-            margin: 5px;
-            padding: 3px;
-            border: 2px solid #00bfa5;
-            box-sizing: border-box;
-            margin-collapse: collapse;
-        }
-
-        #expanded .link-list a {
-            color: white;
-            text-decoration: none;
-        }
-
-        #profile-img {
-            padding: 2px;
-            width: 50px;
-            height: 50px;
-            float: left;
-            border-radius: 50%;
-        }
-
-
-    </style>
-
-</head>
-<body>
-
-
-<div id="frame">
-    <div id="sidepanel">
-        <div id="profile">
-            <div class="wrap">
-                <img alt="" class="online" id="profile-img" src="{{ user.profile.userPic.url }}"
-                     style="object-fit: cover"/>
-                <p>{{ user.first_name | truncatechars:10 }} {{ user.last_name | truncatechars:10 }}</p>
-                <i aria-hidden="true" class="fa fa-chevron-down expand-button"></i>
-
-                <div id="expanded">
-                    <ul>
-                        <li class="link-list"><a href="{% url 'profile' %}"> Profile</a></li>
-                        <li class="link-list"><a href="{% url 'logout' %}"> Logout</a></li>
-                    </ul>
-
-                </div>
+    {% for each in recents %}
+    <li class="contact  {% if each.frnd.username == activeFrnd.username %} active {% endif %} ">
+        <div class="wrap" onclick="chatRedirect('{{ each.frnd.username }}')">
+            <!--            <span class="contact-status online"></span>-->
+            <img alt="" src="{{ each.frnd.profile.userPic.url }}"/>
+            <div class="meta">
+                <p class="name">{{each.frnd.first_name }} {{each.frnd.last_name}}</p>
+                <p class="preview">{% if each.isYou %}<span>You: </span>{%endif%}{{each.lastMsg}}</p>
             </div>
         </div>
-        <div id="search">
-            <label for=""><i aria-hidden="true" class="fa fa-search"></i></label>
-            <input placeholder="Search friends..." type="text"/>
-        </div>
-        <div id="contacts">
-            <ul>
+    </li>
+    {% endfor %}
 
-                {% for each in recents %}
-                <li class="contact  {% if each.frnd.username == activeFrnd.username %} active {% endif %} ">
-                    <div class="wrap" onclick="chatRedirect('{{ each.frnd.username }}')">
-                        <span class="contact-status online"></span>
-                        <img alt="" src="{{ each.frnd.profile.userPic.url }}"/>
-                        <div class="meta">
-                            <p class="name">{{each.frnd.first_name }} {{each.frnd.last_name}}</p>
-                            <p class="preview">{% if each.isYou %}<span>You: </span>{%endif%}{{each.lastMsg}}</p>
-                        </div>
-                    </div>
-                </li>
-                {% endfor %}
+</ul>
+{% endblock contacts %}
 
+{% block bottom-bar %}
+<button onclick="location.href='{% url 'waiting' %}';">Chat Anonymously</button>
+{% endblock bottom-bar %}
 
-                <!--                <li class="contact active">-->
-                <!--                    <div class="wrap">-->
-                <!--                        <span class="contact-status busy"></span>-->
-                <!--                        <img alt="" src="http://emilcarlsson.se/assets/harveyspecter.png"/>-->
-                <!--                        <div class="meta">-->
-                <!--                            <p class="name">Harvey Specter</p>-->
-                <!--                            <p class="preview">Wrong. You take the gun, or you pull out a bigger one. Or, you call their-->
-                <!--                                bluff. Or, you do any one of a hundred and forty six other things.</p>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </li>-->
-            </ul>
-        </div>
-        <div id="bottom-bar">
-            <button onclick="location.href='{% url 'waiting' %}';">Chat Anonymously</button>
-        </div>
+{% block contact-profile%}
+    <img alt="" src="{{activeFrnd.profile.userPic.url }}"/>
+    <p>{{ activeFrnd.first_name}} {{activeFrnd.last_name}}</p>
+    <div class="social-media">
     </div>
-    <div id="content">
-        <div class="contact-profile">
-            <img alt="" src="{{activeFrnd.profile.userPic.url }}"/>
-            <p>{{ activeFrnd.first_name}} {{activeFrnd.last_name}}</p>
-            <div class="social-media">
-            </div>
-        </div>
-        <div class="messages">
+{% endblock contact-profile%}
+
+
+{% block messages %}
             <ul>
                 {% for msg in activeFrndMsgs %}
                 <li class=" {% if msg.sender == user %} replies  {% else %} sent {% endif%} ">
@@ -140,23 +46,5 @@
                 {% endfor %}
 
             </ul>
-        </div>
-        <div class="message-input">
-            <div class="wrap">
-                <input placeholder="Write your message..." type="text"/>
-                <button class="submit"><i aria-hidden="true" class="fa fa-paper-plane"></i></button>
-            </div>
-        </div>
-    </div>
-</div>
-<script type='text/javascript'>
-    var chatData = {
-        'myUsername':'{{ user.username }}',
-        'frndUsername':'{{ activeFrnd }}'
-    }
-</script>
-<script src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script>
-<script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
-<script src="{% static 'chats/chat.js' %}" defer></script>
-</body>
-</html>
+
+{% endblock messages %}
