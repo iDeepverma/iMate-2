@@ -2,20 +2,21 @@
 {% load crispy_forms_tags %}
 {% load static %}
 {% block title %} Profile {% endblock title %}
-{% include 'messages.html' %}
 {% block content%}
 
 <div class="container meRightBox">
+{% include 'messages.html' %}
     <div class="card-body meCardBody">
         <h1 class="card-title mb-5 mt-5"> Welcome {{request.user.first_name}} !!</h1>
         <div class="card-text">
-            <form method="POST" enctype="multipart/form-data">
+            <form enctype="multipart/form-data" method="POST">
                 {% csrf_token%}
                 <div class="form-group " style="max-width: 50%; margin : 0 auto">
                     {{ u_form | crispy}}
                     {{ p_form | crispy}}
-                    <button type='button' class="btn btn-outline-dark btn-block" onclick="location.href='{% url 'chat-recent' %}';">Back</button>
-                    <button type="submit" class="btn btn-outline-dark btn-block" > Save</button>
+                    <button class="btn btn-outline-dark btn-block"><a href="{% url 'chat-recent' %}">Back</a>
+                    </button>
+                    <button class="btn btn-outline-dark btn-block" type="submit"> Save</button>
 
                 </div>
             </form>

@@ -1,9 +1,8 @@
 
+<!DOCTYPE html>
 {% load static %}
 
-<!DOCTYPE html>
-
-<html class=''>
+<html lang="en">
 <head>
     <!--    <script src='//production-assets.codepen.io/assets/editor/live/console_runner-079c09a0e3b9ff743e39ee2d5637b9216b3545af0de366d4b9aad9dc87e26bfd.js'></script>-->
     <!--    <script src='//production-assets.codepen.io/assets/editor/live/events_runner-73716630c22bbc8cff4bd0f07b135f00a0bdc5d14629260c3ec49e5606f98fdd.js'></script>-->
@@ -61,13 +60,20 @@
             border-radius: 50%;
         }
 
-        #clock {
-            color: white;
-            text-align: center;
-            font-size: 60px;
-            margin-top: 0px;
+        #frame #content .messages {
+            width: 100%;
         }
+
+        #contacts ul li.contact .wrap img, #frame #content .contact-profile img {
+            vertical-align: middle;
+            height: 40px;
+            padding: 2px;
+            /*border : 2px solid #042d38;*/
+        }
+
+
     </style>
+    {% block head %} {% endblock head %}
 
 </head>
 <body>
@@ -91,71 +97,50 @@
                 </div>
             </div>
         </div>
+        <div id="search">
+            {% block search %} {% endblock search %}
 
-        <p id="clock"></p>
-
+        </div>
+        <div id="contacts">
+            {% block contacts %} {% endblock contacts %}
+        </div>
         <div id="bottom-bar">
-            <button onclick="location.href='{% url 'chat-recent' %}';">Back</button>
+            {% block bottom-bar %}{% endblock bottom-bar %}
         </div>
     </div>
     <div id="content">
+        {% if activeFrnd is not none %}
         <div class="contact-profile">
-            <img alt="" src="{{activeFrnd.profile.userPic.url }}"/>
-            <p>{{ activeFrnd.first_name}} {{activeFrnd.last_name}}</p>
-            <div class="social-media">
-            </div>
+            {% block contact-profile%} {% endblock contact-profile%}
         </div>
         <div class="messages">
-           <div style="display:flex; justify-content: center; ">
-               <p >Searching ... </p>
-           </div>
+        {% block messages %} {% endblock messages %}
         </div>
-<!--        <div class="message-input">-->
-<!--            <div class="wrap">-->
-<!--                <input placeholder="Write your message..." type="text"/>-->
-<!--                <button class="submit"><i aria-hidden="true" class="fa fa-paper-plane"></i></button>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="message-input">
+            <div class="wrap">
+                <input placeholder="Write your message..." type="text"/>
+                <button class="submit"><i aria-hidden="true" class="fa fa-paper-plane"></i></button>
+            </div>
+        </div>
+        {% else %}
+        <div class="contact-profile" style="display: flex; justify-content: center">
+            <p>CHOOSE A FRIEND OR GO ANONYMOUS</p>
+        </div>
+        <div style ="display : flex; justify-content: center" >
+            <img src="{% static 'chats/choose.svg' %}" alt="">
+        </div>
+        {% endif %}
     </div>
+
 </div>
 <script type='text/javascript'>
     var chatData = {
-        'myUsername':'{{ user.username }}',
+        'myUsername': '{{ user.username }}',
+        'frndUsername': '{{ activeFrnd }}'
     }
 </script>
 <script src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script>
 <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
-<script src="{% static 'chats/randomChat.js' %}" defer></script>
-
-<script>
-    const chatSocket = new WebSocket(
-        'ws://'
-        + window.location.host
-        + '/ws/waiting/'
-    );
-    chatSocket.onmessage = function (e) {
-        const data = JSON.parse(e.data);
-        console.log(data);
-        if (data.type.localeCompare("infoMsg") == 0) {
-            if (data.pairStatus == true) {
-                window.location.href = '/random/';
-            }
-        }
-    };
-
-    function sendSignal() {
-        chatSocket.send(JSON.stringify({
-            'message': 'search'
-        }));
-    }
-
-
-    setInterval(sendSignal, 1000);
-
-
-    chatSocket.onclose = function (e) {
-        console.error('Chat socket closed unexpectedly');
-    };
-</script>
+<script defer src="{% static 'chats/chat.js' %}"></script>
 </body>
 </html>

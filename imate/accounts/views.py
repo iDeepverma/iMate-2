@@ -15,6 +15,7 @@ def signupView(request):
         if form.is_valid():
             user = form.save()
             login(request,user,backend='django.contrib.auth.backends.ModelBackend')
+            messages.success(request, f'Account created for {request.user.username}!!!')
             return redirect('profile')
     context['form'] = form
     return render(request, 'accounts/signup.html',context)
@@ -32,9 +33,9 @@ def loginView(request):
 				login(request, user)
 				return redirect("/")
 			else:
-				messages.error(request,"Invalid username or password.")
+				messages.error(request,f'Invalid username or password.')
 		else:
-			messages.error(request,"Invalid username or password.")
+			messages.error(request,f'Invalid username or password.')
 	form = AuthenticationForm()
 	return render(request=request, template_name="accounts/login.html", context={"form":form})
 
