@@ -197,9 +197,13 @@ class RandomChat(AsyncWebsocketConsumer):
         self.user = self.scope['user']
         if self.user.is_authenticated == False:
             raise DenyConnection('User not logged in')
+        
         self.groupName = await database_sync_to_async(self.getGroupName)()     #derives groupname for the user
+        
         await database_sync_to_async(self.setOnline)(True)                     #sets its online status to true
+        
         self.frndModel = await database_sync_to_async(self.setFrndModel)()
+
         await self.channel_layer.group_add(                                    #adding channel layer to above two groups
             self.groupName,
             self.channel_name
@@ -284,16 +288,18 @@ class RandomChat(AsyncWebsocketConsumer):
             return None
     
     def addFriend(self):
-
-        if self.frndModel.user1 == self.user.profile:
-            print('funck')
-            self.frndModel.user1consent = True
-            self.frndModel.save()
-        elif self.frndModel.user2 == self.user.profile:
-            print('whys')
-            self.frndModel.user2consent = True
-            self.frndModel.save()
+        print('hello')
+        frndModel = self.frndModel
+        if frndModel.user1 == self.profile:
+            print('one')
+            frndModel.user1consent = True
+            frndModel.save()
+        elif self.frndModel.user2 == self.profile:
+            print('two')
+            frndModel.user2consent = True
+            frndModel.save()
         
-        if self.frndModel.user1consent ==True and self.frndModel.user2consent==True:
-            self.frndModel.user1.userFriends.add(self.frndModel.user2.user)
-            self.frndModel.user2.userFriends.add(self.frndModel.user1.user)
+        if frndModel.user1consent ==True and self.frndModel.user2consent==True:
+            print('done')
+            frndModel.user1.userFriends.add(frndModel.user2.user)
+            frndModel.user2.userFriends.add(frndModel.user1.user)
