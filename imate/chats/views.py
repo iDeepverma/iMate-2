@@ -20,14 +20,16 @@ def chatView(request,username=None):
         try :
             lastMsgObj = msgs.latest('timestamp')
             lastMsg = lastMsgObj.message
+            isYou = True if lastMsgObj.sender==request.user else False
         except :
             lastMsg =""
+            isYou = False
 
         recentData = {
             'frnd':i,
             'unread':unread, #no of unread
             'lastMsg':lastMsg, #laSstmsg
-            'isYou':True if lastMsgObj.sender==request.user else False
+            'isYou':isYou
         }
         recents.append(recentData)
     context['recents'] = recents
