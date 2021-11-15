@@ -73,6 +73,7 @@
 
 
     </style>
+    {% block head %} {% endblock head %}
 
 </head>
 <body>
@@ -113,15 +114,7 @@
             {% block contact-profile%} {% endblock contact-profile%}
         </div>
         <div class="messages">
-            <ul>
-                {% for msg in activeFrndMsgs %}
-                <li class=" {% if msg.sender == user %} replies  {% else %} sent {% endif%} ">
-
-                    <p>{{ msg.message }}</p>
-                </li>
-                {% endfor %}
-
-            </ul>
+        {% block messages %} {% endblock messages %}
         </div>
         <div class="message-input">
             <div class="wrap">

@@ -34,3 +34,17 @@
     <div class="social-media">
     </div>
 {% endblock contact-profile%}
+
+
+{% block messages %}
+            <ul>
+                {% for msg in activeFrndMsgs %}
+                <li class=" {% if msg.sender == user %} replies  {% else %} sent {% endif%} ">
+
+                    <p>{{ msg.message }}</p>
+                </li>
+                {% endfor %}
+
+            </ul>
+
+{% endblock messages %}
