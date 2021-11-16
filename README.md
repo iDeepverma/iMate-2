@@ -17,3 +17,10 @@ You need to have a redis server up and running to properly use this app. You can
 
 	sudo docker run -p 6379:6379 -d redis:5
 - Start the development server using `python manage.py runserver`
+
+### Setting Up Google Auth
+In order to use the Google OAuth authentication you will need to signup for google oauth and register the same with the social App in django admin. Please Refer [link](https://www.section.io/engineering-education/django-google-oauth/) for more info.
+
+<br>
+<hr>
+- There are two branches one using SqlLite and another from Mysql both are similar in features except the fact that mysql one will not support Emojis on the go and needs to change some defaults of the mysql server to enable so.

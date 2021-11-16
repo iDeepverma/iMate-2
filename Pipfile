@@ -10,6 +10,7 @@ pillow = "*"
 channels = "*"
 channels-redis = "*"
 django-crispy-forms = "*"
+mysqlclient = "*"
 
 [dev-packages]
 
