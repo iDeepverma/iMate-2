@@ -66,7 +66,7 @@ def profileView(request):
             u_form.save()
             p_form.save()
             messages.success(request , f'Account updated!',extra_tags='alert alert-success alert-dismissible fade show')
-            return redirect('chat-recent')
+            return redirect('profile')
     else :
         try:
             UserProfile = request.user.profile
