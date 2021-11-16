@@ -14,14 +14,18 @@
                 <div class="form-group " style="max-width: 50%; margin : 0 auto">
                     {{ u_form | crispy}}
                     {{ p_form | crispy}}
-                    <button class="btn btn-outline-dark btn-block"><a href="{% url 'chat-recent' %}">Back</a>
-                    </button>
-                    <button class="btn btn-outline-dark btn-block" type="submit"> Save</button>
-
+                    <button type='button' class="btn btn-outline-dark btn-block" onclick="location.href='{% url 'chat-recent' %}';">Back</button>
+                    <button class="btn btn-outline-dark btn-block" type="submit" > Save</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<script>
+setTimeout(function (){
+    const k = document.querySelector('#deeps');
+    k.style.display='none'
+},5000)
+</script>
 {% endblock %}

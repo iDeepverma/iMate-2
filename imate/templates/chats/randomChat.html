@@ -94,14 +94,13 @@
         <p id="clock"></p>
 
         <div id="bottom-bar">
-            <button id='addFriend-button' onclick="addFriend()">Add Friend</button>
+            <button id='addFriend-button' onclick="alert('Request sent!!');location.href='{% url 'addfrnd' %}';">Add Friend</button>
             <button onclick="location.href='{% url 'chat-recent' %}';">Back</button>
         </div>
     </div>
     <div id="content">
         <div class="contact-profile">
-            <img alt="" src="{{activeFrnd.profile.userPic.url }}"/>
-            <p>{{ activeFrnd.first_name}} {{activeFrnd.last_name}}</p>
+            <img alt="" src="/media/profilePics/default.jpg"/>
             <div class="social-media">
             </div>
         </div>
@@ -146,6 +145,7 @@
         if (distance < 0) {
             clearInterval(x);
             document.getElementById("clock").innerHTML = "EXPIRED";
+            endChat();
         }
     }, 1000);
 </script>

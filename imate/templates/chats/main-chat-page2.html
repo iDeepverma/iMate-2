@@ -1,9 +1,9 @@
 {% extends 'chats/chat-base.html' %}
 
-{% block search  %}
+{% comment %} {% block search  %}
 <label for=""><i aria-hidden="true" class="fa fa-search"></i></label>
 <input placeholder="Search friends..." type="text"/>
-{% endblock search %}
+{% endblock search %} {% endcomment %}
 
 {% block contacts %}
 <ul>
@@ -36,7 +36,7 @@
 {% endblock contact-profile%}
 
 
-{% block messages %}
+{% block msgItems %}
             <ul>
                 {% for msg in activeFrndMsgs %}
                 <li class=" {% if msg.sender == user %} replies  {% else %} sent {% endif%} ">
@@ -47,4 +47,4 @@
 
             </ul>
 
-{% endblock messages %}
+{% endblock msgItems %}

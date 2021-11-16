@@ -12,7 +12,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from os.path import join
+from django.contrib.messages import constants as messages
 
+MESSAGE_TAGS = {
+    messages.ERROR:'danger'
+}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

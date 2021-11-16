@@ -85,10 +85,10 @@ document.querySelector('.submit').onclick = function(e) {
 }};
 
 
-function addFriend(){
-    chatSocket.send(JSON.stringify({
-        'signal':'add_friend'
-    }))
-    const addFriendBtnDOM = document.querySelector('#addFriend-button');
-    addFriendBtnDOM.disabled = true;
-}
+// function addFriend(){
+//     chatSocket.send(JSON.stringify({
+//         'signal':'add_friend'
+//     }))
+//     const addFriendBtnDOM = document.querySelector('#addFriend-button');
+//     addFriendBtnDOM.disabled = true;
+// }

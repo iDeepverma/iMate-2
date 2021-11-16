@@ -42,7 +42,8 @@ def loginView(request):
 @login_required
 def logoutView(request):
     logout(request)
-    return render(request,'accounts/logout.html')
+    messages.success(request,"Successfully Logged Out")
+    return redirect('login')
 
 # @login_required
 # def profileView(request):
@@ -64,8 +65,8 @@ def profileView(request):
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request , f'Account updated!')
-            return redirect('profile')
+            messages.success(request , f'Account updated!',extra_tags='alert alert-success alert-dismissible fade show')
+            return redirect('chat-recent')
     else :
         try:
             UserProfile = request.user.profile
@@ -87,3 +88,6 @@ def profileView(request):
 #         context = {}
 #         context['profile'] =  get_object_or_404(get_user_model(),username=username).profile
 #         return render(request,'accounts/search.html')
+
+def about(request):
+    return render(request,'about.html')

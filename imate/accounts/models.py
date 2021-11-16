@@ -54,5 +54,6 @@ class RandomFrnd(models.Model):
         on_delete=models.CASCADE,
         related_name='random_self'
     )
+    chatHash = models.CharField(max_length=64,blank=True,null=True)
     user1consent = models.BooleanField(default=False)
     user2consent = models.BooleanField(default=False)

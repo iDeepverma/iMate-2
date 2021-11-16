@@ -6,6 +6,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
 from channels.exceptions import DenyConnection
 from . import models
 from accounts.models import UserProfile,RandomFrnd
+import time
 
 class ChatConsumer(AsyncWebsocketConsumer):
     
@@ -200,9 +201,9 @@ class RandomChat(AsyncWebsocketConsumer):
         
         self.groupName = await database_sync_to_async(self.getGroupName)()     #derives groupname for the user
         
-        await database_sync_to_async(self.setOnline)(True)                     #sets its online status to true
+        # await database_sync_to_async(self.setOnline)(True)                     #sets its online status to true
         
-        self.frndModel = await database_sync_to_async(self.setFrndModel)()
+        await database_sync_to_async(self.setFrndModel)()
 
         await self.channel_layer.group_add(                                    #adding channel layer to above two groups
             self.groupName,
@@ -221,8 +222,8 @@ class RandomChat(AsyncWebsocketConsumer):
             self.groupName,
             self.channel_name
         )
-        await database_sync_to_async(self.setOnline)(False)                    #sets online status to false in profile database
-        await database_sync_to_async(self.removeFrndModel)()
+        # await database_sync_to_async(self.setOnline)(False)                    #sets online status to false in profile database
+        # await database_sync_to_async(self.removeFrndModel)()
         return await super().disconnect(code)
 
     async def receive(self, text_data=None, bytes_data=None):
@@ -242,9 +243,9 @@ class RandomChat(AsyncWebsocketConsumer):
                     'sender':self.user.username
                 }
             )
-        elif 'signal' in data_obj:
-            if data_obj['signal'] == 'add_friend':
-                await database_sync_to_async(self.addFriend)()
+        # elif 'signal' in data_obj:
+        #     if data_obj['signal'] == 'add_friend':
+        #         await database_sync_to_async(self.addFriend)()
 
         return await super().receive(text_data=text_data, bytes_data=bytes_data)
     
@@ -271,35 +272,37 @@ class RandomChat(AsyncWebsocketConsumer):
         self.profile = self.user.profile
         return self.profile.randomChatId
     
-    def setOnline(self, value):
-        profile = UserProfile.objects.get(user=self.user)
-        profile.isOnline = value
-        profile.save()
+    # def setOnline(self, value):
+    #     profile = UserProfile.objects.get(user=self.user)
+    #     profile.isOnline = value
+    #     profile.save()
 
     def setFrndModel(self):
         users = UserProfile.objects.filter(randomChatId=self.groupName).order_by('user')
-        return RandomFrnd.objects.get_or_create(user1=users[0],user2=users[1])[0]
+        return RandomFrnd.objects.get_or_create(user1=users[0],user2=users[1],defaults={
+            'chatHash':self.groupName
+        })[0]
     
-    def removeFrndModel(self):
-        users = UserProfile.objects.filter(randomChatId=self.groupName).order_by('user')
-        try:
-            RandomFrnd.objects.get(user1=users[0],user2=users[1]).delete()
-        except RandomFrnd.DoesNotExist:
-            return None
+    # def removeFrndModel(self):
+    #     users = UserProfile.objects.filter(randomChatId=self.groupName).order_by('user')
+    #     try:
+    #         RandomFrnd.objects.get(user1=users[0],user2=users[1]).delete()
+    #     except RandomFrnd.DoesNotExist:
+    #         return None
     
-    def addFriend(self):
-        print('hello')
-        frndModel = self.frndModel
-        if frndModel.user1 == self.profile:
-            print('one')
-            frndModel.user1consent = True
-            frndModel.save()
-        elif self.frndModel.user2 == self.profile:
-            print('two')
-            frndModel.user2consent = True
-            frndModel.save()
+    # def addFriend(self):
+    #     print('hello')
+    #     frndModel = self.frndModel
+    #     if frndModel.user1 == self.profile:
+    #         print('one')
+    #         frndModel.user1consent = True
+    #         frndModel.save()
+    #     elif self.frndModel.user2 == self.profile:
+    #         print('two')
+    #         frndModel.user2consent = True
+    #         frndModel.save()
         
-        if frndModel.user1consent ==True and self.frndModel.user2consent==True:
-            print('done')
-            frndModel.user1.userFriends.add(frndModel.user2.user)
-            frndModel.user2.userFriends.add(frndModel.user1.user)
+    #     if frndModel.user1consent ==True and self.frndModel.user2consent==True:
+    #         print('done')
+    #         frndModel.user1.userFriends.add(frndModel.user2.user)
+    #         frndModel.user2.userFriends.add(frndModel.user1.user)

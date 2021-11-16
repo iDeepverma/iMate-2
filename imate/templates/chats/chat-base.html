@@ -78,7 +78,6 @@
 </head>
 <body>
 
-
 <div id="frame">
     <div id="sidepanel">
         <div id="profile">
@@ -92,7 +91,7 @@
                     <ul>
                         <li class="link-list"><a href="{% url 'profile' %}"> Profile</a></li>
                         <li class="link-list"><a href="{% url 'logout' %}"> Logout</a></li>
-                    </ul>
+                        </ul>
 
                 </div>
             </div>
@@ -114,7 +113,7 @@
             {% block contact-profile%} {% endblock contact-profile%}
         </div>
         <div class="messages">
-        {% block messages %} {% endblock messages %}
+        {% block msgItems %} {% endblock msgItems %}
         </div>
         <div class="message-input">
             <div class="wrap">
