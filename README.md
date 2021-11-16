@@ -23,4 +23,5 @@ In order to use the Google OAuth authentication you will need to signup for goog
 
 <br>
 <hr>
+
 - There are two branches one using SqlLite and another from Mysql both are similar in features except the fact that mysql one will not support Emojis on the go and needs to change some defaults of the mysql server to enable so.
