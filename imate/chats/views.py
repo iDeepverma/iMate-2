@@ -82,5 +82,5 @@ def addFriend(request):
         obj.user1.userFriends.add(obj.user2.user)
         obj.user2.userFriends.add(obj.user1.user)
         obj.delete()
-    messages.success(request,'Sent Request')
+    # messages.success(request,'Sent Request')
     return redirect('chat-recent')
