@@ -47,6 +47,10 @@
             margin-collapse: collapse;
         }
 
+        #expanded .link-list:hover{
+            background: #435f7a;
+        }
+
         #expanded .link-list a {
             color: white;
             text-decoration: none;
@@ -89,12 +93,12 @@
 
                 <div id="expanded">
                     <ul>
-                        <li class="link-list"><a href="{% url 'profile' %}"> Profile</a></li>
-                        <li class="link-list"><a href="{% url 'logout' %}"> Logout</a></li>
+                        <li class="link-list" onclick="location.href='{% url 'profile' %}';">Profile</li>
+                        <li class="link-list" onclick="location.href='{% url 'logout' %}';">Logout</li>
                         </ul>
 
                 </div>
-            </div>
+            </div>  
         </div>
         <div id="search">
             {% block search %} {% endblock search %}
