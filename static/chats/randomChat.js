@@ -31,6 +31,7 @@ function endChat(offline){
     inputBox.disabled=true;
     inputBox.placeholder = "Chat Ended";
     inputBox.style.textAlign = 'center';
+    document.getElementById("clock").innerHTML = "EXPIRED";
 }
 
 
