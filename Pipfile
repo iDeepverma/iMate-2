@@ -12,6 +12,7 @@ channels-redis = "*"
 django-crispy-forms = "*"
 mysqlclient = "*"
 gunicorn = "*"
+daphne = "*"
 
 [dev-packages]
 
