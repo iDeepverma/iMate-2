@@ -11,6 +11,7 @@ channels = "*"
 channels-redis = "*"
 django-crispy-forms = "*"
 mysqlclient = "*"
+gunicorn = "*"
 
 [dev-packages]
 
