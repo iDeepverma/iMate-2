@@ -13,9 +13,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from os.path import join
 from django.contrib.messages import constants as messages
-import django
-
-django.setup()
 
 MESSAGE_TAGS = {
     messages.ERROR:'danger'
